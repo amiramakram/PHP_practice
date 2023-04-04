@@ -17,7 +17,7 @@ try{
    
    echo "<table class='table'>
    <tr>
-   <th>ID</th> <th>NAME</th>
+   <th>ID</th> <th>USER NAME</th>
    <th>PASSWORD</th> <th>EDIT</th> <th>DELETE</th>
    </tr>";
 
@@ -30,7 +30,7 @@ foreach($users as $user){
         echo"<td>{$rowData}</td>";
     }
     echo"<td><a class='btn btn-warning'
-    href='editUsers.php?ID={$datas[0]}'>EDIT</a></td>
+    href='editUsers.php?ID={$datas[0]} &email={$datas[1]}'>EDIT</a></td>
     <td><a class='btn btn-danger' href='deleteUser.php?ID={$datas[0]}'>DELETE</a></td>
     
     </tr>";
@@ -42,4 +42,4 @@ echo"</table>";
     echo $exception->getMessag();
 }
 ?>
-<a href="myForm.html" class="btn btn-primary" > Insert user</a>
+<a href="myForm.php" class="btn btn-primary" > Insert user</a>

@@ -1,16 +1,92 @@
 <?php
-ini_set('display_errors', 1);
-ini_set('display_startup_errors', 1);
-error_reporting(E_ALL);
-echo '<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-aFq/bzH65dt+w6FI2ooMVUpc+21e0SRygnTpmBvdBgSdnuTN7QbdgL+OapgHtvPp" crossorigin="anonymous">
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha2/dist/js/bootstrap.bundle.min.js" integrity="sha384-qKXV1j0HvMUeCBQ+QVp7JcfGl760yU08IQ+GpUo5hlbpg51QRiuqHAJz8+BrxE/N" crossorigin="anonymous"></script>';
+if(isset($_GET["errors"])){ 
+  $errors = json_decode($_GET["errors"], true); 
+} 
+if(isset($_GET["old"])){ 
+  $old_data = json_decode($_GET["old"], true); 
+} 
+?>
+
+<?php
+
 
 
 
 
 echo "<div class='container fs-4'>";
+
+
+
+
+try{
+// delete row
+// check id spaces
+
+if(isset($_GET['ID'])){
+  $id = trim(strip_tags($_GET['ID']));
+}
+
+
+    $users=file('insertedUsers.txt');
+foreach($users as $index=>$user){
+   $users_data=explode(':',$user); 
+   if( $users_data[0]==$id){
+    unset($users[$index]);
+    break;
+   }
+}
+
+    $file=fopen('insertedUsers.txt','w');
+    foreach($users as $user){
+    fwrite($file,$user);
+    }
+    fclose($file);
+    // header('Location:tableUser.php');
+
+
+}catch(Exception $exception){
+    echo $exception->getMessag();
+}
+
+?>
+
+
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-aFq/bzH65dt+w6FI2ooMVUpc+21e0SRygnTpmBvdBgSdnuTN7QbdgL+OapgHtvPp" crossorigin="anonymous">
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha2/dist/js/bootstrap.bundle.min.js" integrity="sha384-qKXV1j0HvMUeCBQ+QVp7JcfGl760yU08IQ+GpUo5hlbpg51QRiuqHAJz8+BrxE/N" crossorigin="anonymous"></script>
+
+
+<div class="container">
+    <div class="row">
+      <div class="d-flex justify-content-center" ><p class="fs-1 " style="color: navy; font-weight: bolder;">Update user</p></div>
+<form method="post" action="insertUser.php">
+  <div class="mb-3">
+<input type="text" class="form-control" id="id" name="id" 
+                    value="<?php if(isset($old_data['id'])) echo $old_data['id']; elseif(isset($_GET['ID']))echo $_GET['ID'];?>" 
+             >
+    <label for="exampleInputEmail1" class="form-label" >Email address</label>
+    <input name='email' type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp"
+    value="<?php if(isset($old_data['email'])) echo $old_data['email']; elseif(isset($_GET['email']))echo $_GET['email'];?>">
+    <span class="text-danger"> <?php if(isset($errors['email'])) echo $errors['email']; ?> </span>
+
+    
+  </div>
+  <div class="mb-3">
+    <label for="exampleInputPassword1" class="form-label">Password</label>
+    <input name='password' type="password" class="form-control" id="exampleInputPassword1">
+    <span class="text-danger"> <?php if(isset($errors['password'])) echo $errors['password']; ?> </span>
+  </div>
+  
+  <div class="d-flex justify-content-center">
+  <button type="submit" class="btn" style="background-color: rgb(68, 108, 91);color: aliceblue; border-bottom:3px rgb(157, 172, 158) solid">Confirm your new data</button>
+</div>
+</form>
+</div>
+</div>
+<!-- _________________________________________
+
+echo "<div class='container fs-4'>";
 echo"<h1>Edit user</h1>";
-echo "<form method='post' action='tableUser.php'>
+echo "<form method='post' action='insertUser.php'>
 <div class='mb-3'>
   <label for='exampleInputEmail1' class='form-label' >Update your email</label>
   <input name='emailNew' type='email' class='form-control' id='exampleInputEmail1' aria-describedby='emailHelp'>
@@ -20,43 +96,25 @@ echo "<form method='post' action='tableUser.php'>
   <label for='exampleInputPassword1' class='form-label'>Update your Password</label>
   <input name='passwordNew' type='text' class='form-control' id='exampleInputPassword1'>
 </div>
-
+<input name='id' type='text' class='form-control' id='exampleInputPassword1'>
 <div class='d-flex justify-content-center'>
 <button type='submit' class='btn' style='background-color: rgb(68, 108, 91);color: aliceblue; border-bottom:3px rgb(157, 172, 158) solid'>Confirm your new data</button>
 </div>
 </form>";
 
-try{
-    
-var_dump($_POST);
-    
-        $id=$_GET["ID"];
-        $users=file('insertedUsers.txt');
-    foreach($users as $index=>$user){
-       $users_data=explode(':',$user); 
-       if( $users_data[0]==$id){
-        unset($users[$index]);
-       }}
-$file=fopen('insertedUsers.txt','w');
-    foreach($users as $user){
-    fwrite($file,$user);
-    }
+
+
 
     $file=fopen('insertedUsers.txt','a');
    
     $data="{$id}:{$_POST["emailNew"]}:{$_POST["passwordNew"]}".PHP_EOL;
     fwrite($file,$data);
     fclose($file);
-    // header('Location:tableUser.php');
 
 
 
    
 
-}catch(Exception $exception){
-    echo $exception->getMessag();
-}
 
 
-
-?>
+ -->
